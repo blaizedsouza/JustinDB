@@ -19,6 +19,7 @@ object Version {
   val macroParadise      = "2.1.1"
   val rocksDB            = "5.5.1"
   val dockerItScala      = "0.9.6"
+  val akkaClusterDowning = "0.0.9"
 }
 
 object Library {
@@ -60,6 +61,9 @@ object Library {
   // storage
   val rocksdb              = "org.rocksdb"           % "rocksdbjni"                     % Version.rocksDB
   val kryo                 = "com.esotericsoftware"  % "kryo"                           % Version.kryo % "provided"
+
+  // split-brain resolver
+  val akkaClusterDowning   = "com.github.TanUkkii007" %% "akka-cluster-custom-downing"  % Version.akkaClusterDowning
 }
 
 object Dependencies {
@@ -73,16 +77,13 @@ object Dependencies {
 
   private val constructr = Seq(constructR, constructRetcd)
 
+  // projects
   val core = akkaCommon ++ akkaClusterCommon ++ genericTest ++ Seq(scalacheck % "test", logback, scalaLogging) ++ Seq(akkaHttpSprayJson)
-
   val httpApi = akkaCommon ++ akkaHttpCommon ++ genericTest
-
   val storageApi = genericTest
   val storageInMem = genericTest
   val storageLogDBExperimental = genericTest
   val storageRocksDB = Seq(rocksdb, rocksdb % "test", kryo) ++ genericTest
-
-  val splitBrainResolver = genericTest
-
+  val splitBrainResolver = Seq(akkaClusterDowning) ++ genericTest
   val root = core ++ httpApi ++ storageApi ++ constructr ++ Seq(dockerTestKit, dockerTestKitImpl)
 }
